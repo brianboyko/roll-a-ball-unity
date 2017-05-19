@@ -1,15 +1,21 @@
 ﻿using System.Collections;
+using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
-	public float speed; 
-
+	public float speed;
+	public Text countText; 
+	public Text winText;
+	private int count; 
 	private Rigidbody rb;
 
 	void Start (){
 		rb = GetComponent<Rigidbody> ();
+		count = 0; 
+		winText.text = "";
+		SetCountText ();
 	}
 
 	// FixedUpdate is performed just before rendering any physics
@@ -22,5 +28,20 @@ public class PlayerController : MonoBehaviour {
 
 		rb.AddForce (movement * speed);
 	}
-	// apply that input to the Player as movement.
+
+	void OnTriggerEnter(Collider other) {
+		if(other.gameObject.CompareTag("Pick Up")){
+			other.gameObject.SetActive(false); 
+			count = count + 1; 
+			SetCountText (); 
+		}
+	}
+
+	void SetCountText (){
+		countText.text = "Count: " + count.ToString (); 
+		if (count > 12) {
+			winText.text = "You Win!";
+		}
+	}
+		
 }
